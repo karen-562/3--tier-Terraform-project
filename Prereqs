@@ -1,0 +1,49 @@
+## Prereqs
+- Terraform >= 1.6
+- AWS credentials configured (profile or env vars)
+- Existing EC2 key pair name (for SSH) if needed
+
+
+## Quick start
+```bash
+# 1) Clone and enter the folder
+# git clone <your-repo> && cd aws-3tier-terraform
+
+
+# 2) Initialize
+terraform init
+
+
+# 3) Plan (override defaults as needed)
+terraform plan \
+-var "project=cloudinfra" \
+-var "region=us-east-1" \
+-var "admin_ip=YOUR_IP/32" \
+-var "key_name=YOUR_KEY_NAME" \
+-var 'alert_emails=["you@example.com"]'
+
+
+# 4) Apply
+terraform apply -auto-approve
+
+
+# 5) Access your app
+# Copy the output `alb_url` and open in a browser
+```
+
+
+## Customization
+- Replace the `user_data.sh` with your app bootstrap.
+- Set `ami_id` to a custom AMI if you have one.
+- Toggle RDS via `create_rds` and tune instance sizes.
+
+
+## Clean up
+```bash
+terraform destroy
+```
+
+
+## Notes
+- For prod, consider one NAT per AZ, HTTPS on ALB with ACM, WAF, SSM Session Manager (no SSH), and secrets in AWS Secrets Manager.
+
