@@ -1,0 +1,31 @@
+# Outputs
+# ---------------------------
+output "alb_dns_name" {
+value = aws_lb.alb.dns_name
+description = "Public DNS of the ALB"
+}
+
+
+output "asg_name" {
+value = aws_autoscaling_group.app_asg.name
+description = "Auto Scaling Group name"
+}
+
+
+output "vpc_id" {
+value = aws_vpc.main.id
+description = "VPC ID"
+}
+
+
+# ---------------------------
+# (Optional) SSM Parameter Store for DB creds (write-only example)
+# ---------------------------
+resource "aws_ssm_parameter" "db_password" {
+count = var.create_rds && var.store_db_password_in_ssm ? 1 : 0
+name = "/${var.project}/db/password"
+description = "DB password"
+type = "SecureString"
+value = var.db_password
+overwrite = true
+}
